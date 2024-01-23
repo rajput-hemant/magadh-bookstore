@@ -1,0 +1,83 @@
+{
+	"id": "24b0ea02-c122-46b1-ad50-5360fb68529c",
+	"prevId": "00000000-0000-0000-0000-000000000000",
+	"version": "5",
+	"dialect": "pg",
+	"tables": {
+		"magadh_bookstore_user": {
+			"name": "magadh_bookstore_user",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "uuid",
+					"primaryKey": true,
+					"notNull": true,
+					"default": "gen_random_uuid()"
+				},
+				"name": {
+					"name": "name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"email": {
+					"name": "email",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"username": {
+					"name": "username",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"password": {
+					"name": "password",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"role": {
+					"name": "role",
+					"type": "role",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "'user'"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {
+				"magadh_bookstore_user_email_unique": {
+					"name": "magadh_bookstore_user_email_unique",
+					"nullsNotDistinct": false,
+					"columns": ["email"]
+				},
+				"magadh_bookstore_user_username_unique": {
+					"name": "magadh_bookstore_user_username_unique",
+					"nullsNotDistinct": false,
+					"columns": ["username"]
+				}
+			}
+		}
+	},
+	"enums": {
+		"role": {
+			"name": "role",
+			"values": {
+				"admin": "admin",
+				"user": "user",
+				"author": "author"
+			}
+		}
+	},
+	"schemas": {},
+	"_meta": {
+		"columns": {},
+		"schemas": {},
+		"tables": {}
+	}
+}

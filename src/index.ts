@@ -6,7 +6,7 @@ import { prettyJSON } from "hono/pretty-json";
 
 import "./lib/env"; // This is validation for the environment variables early
 
-import { home } from "./routes";
+import { auth, home, ping } from "./routes";
 import type { ServerResponse } from "./types/server-response";
 
 const app = new Hono({ strict: false }); // match routes w/ or w/o trailing slash
@@ -22,6 +22,8 @@ app.use("*", cors(), prettyJSON(), logger());
  * -----------------------------------------------------------------------------------------------*/
 
 app.route("/", home);
+app.route("/auth", auth);
+app.route("/ping", ping);
 
 /* 404 */
 app.notFound((c) => {
