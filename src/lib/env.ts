@@ -36,6 +36,8 @@ export const env = createEnv({
 			.regex(/^postgres:\/\//, {
 				message: "DATABASE_URL must be a postgres URL",
 			}),
+
+		JWT_SECRET: z.string({ required_error: "JWT_SECRET is required" }),
 	},
 
 	runtimeEnv: process.env,
