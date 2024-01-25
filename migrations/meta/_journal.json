@@ -1,13 +1,20 @@
 {
-	"version": "5",
-	"dialect": "pg",
-	"entries": [
-		{
-			"idx": 0,
-			"version": "5",
-			"when": 1706721483815,
-			"tag": "0000_fluffy_rawhide_kid",
-			"breakpoints": true
-		}
-	]
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1706721483815,
+      "tag": "0000_fluffy_rawhide_kid",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1706877311846,
+      "tag": "0001_eminent_spitfire",
+      "breakpoints": true
+    }
+  ]
 }
