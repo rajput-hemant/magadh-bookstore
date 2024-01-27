@@ -82,17 +82,18 @@ auth.post(
 			);
 		}
 
-		const { email, password } = result.data;
+		const { email, password, role } = result.data;
 
 		const user = await db.query.users.findFirst({
-			where: (u, { eq }) => eq(u.email, email),
+			where: (u, { eq, and }) => and(eq(u.email, email), eq(u.role, role)),
 		});
 
 		if (!user) {
 			return c.json(
 				{
 					status: "ERROR",
-					message: "❌ User not found, the email is not registered",
+					message:
+						"❌ User not found, the email is not registered or the role is incorrect",
 					error: "user_not_found",
 				} satisfies ServerResponse,
 				400,
@@ -132,7 +133,7 @@ auth.post(
 		return c.json({
 			status: "SUCCESS",
 			message: "✅ You have successfully logged in",
-			data: { token },
+			data: { token, tokenType: "Bearer" },
 		} satisfies ServerResponse);
 	}),
 );
