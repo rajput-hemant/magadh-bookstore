@@ -6,8 +6,9 @@ import { prettyJSON } from "hono/pretty-json";
 
 import "./lib/env"; // This is validation for the environment variables early
 
-import { auth, home, ping } from "./routes";
+import { auth, book, home, ping } from "./routes";
 import type { ServerResponse } from "./types/server-response";
+import { HTTPException } from "hono/http-exception";
 
 const app = new Hono({ strict: false }); // match routes w/ or w/o trailing slash
 
@@ -24,6 +25,7 @@ app.use("*", cors(), prettyJSON(), logger());
 app.route("/", home);
 app.route("/auth", auth);
 app.route("/ping", ping);
+app.route("/book", book);
 
 /* 404 */
 app.notFound((c) => {
@@ -41,6 +43,20 @@ app.notFound((c) => {
  * Global Error Handler
  * -----------------------------------------------------------------------------------------------*/
 app.onError((err, c) => {
+	if (err instanceof HTTPException) {
+		return c.json(
+			{
+				status: "ERROR",
+				error: "unauthorized",
+				message:
+					"❌ You are not authorized to access this resource, please provide a valid token",
+			} satisfies ServerResponse,
+			err.status,
+		);
+	}
+
+	console.error(err);
+
 	return c.json(
 		{
 			status: "ERROR",
