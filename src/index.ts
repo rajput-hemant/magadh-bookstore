@@ -3,12 +3,12 @@ import { cors } from "hono/cors";
 import { showRoutes } from "hono/dev";
 import { logger } from "hono/logger";
 import { prettyJSON } from "hono/pretty-json";
+import { HTTPException } from "hono/http-exception";
 
 import "./lib/env"; // This is validation for the environment variables early
 
 import { auth, book, home, ping } from "./routes";
 import type { ServerResponse } from "./types/server-response";
-import { HTTPException } from "hono/http-exception";
 
 const app = new Hono({ strict: false }); // match routes w/ or w/o trailing slash
 

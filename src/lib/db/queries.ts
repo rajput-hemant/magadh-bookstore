@@ -3,11 +3,12 @@
  * -----------------------------------------------------------------------------------------------*/
 
 import postgres from "postgres";
+import { eq } from "drizzle-orm";
+import type { z } from "zod";
+
 import { db } from ".";
 import { CustomError } from "../utils";
 import { type NewBook, books } from "./schema";
-import { eq } from "drizzle-orm";
-import type { z } from "zod";
 import type { listBookSchema } from "../validations/book";
 
 export async function listBooks(params: z.infer<typeof listBookSchema>) {
