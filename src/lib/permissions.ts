@@ -2,7 +2,10 @@ import type { Role } from "./db/schema";
 
 export const ALL_PERMISSIONS = [
 	// User
+	"list_user",
+	"update_user",
 	"delete_user",
+	"change_role",
 	"purchase_history",
 
 	// Book
@@ -17,13 +20,22 @@ export type Permission = (typeof ALL_PERMISSIONS)[number];
 type Permissions = Record<Role, Permission[]>;
 
 export const permissions: Permissions = {
-	user: ["purchase_book", "purchase_book", "delete_user", "purchase_history"],
+	user: [
+		"purchase_book",
+		"update_user",
+		"delete_user",
+		"change_role",
+		"purchase_history",
+	],
 	author: [
+		"update_user",
+		"delete_user",
+		"change_role",
 		"create_book",
 		"update_book",
 		"delete_book",
 		"sell_book",
 		"purchase_history",
 	],
-	admin: ["delete_user", "delete_book"],
+	admin: ["list_user", "delete_user", "change_role", "delete_book"],
 };
