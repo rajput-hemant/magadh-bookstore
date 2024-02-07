@@ -7,7 +7,7 @@ import { HTTPException } from "hono/http-exception";
 
 import "./lib/env"; // This is validation for the environment variables early
 
-import { auth, user, book, home, ping } from "./routes";
+import { auth, user, book, home, ping, store } from "./routes";
 import type { ServerResponse } from "./types/server-response";
 
 const app = new Hono({ strict: false }); // match routes w/ or w/o trailing slash
@@ -25,8 +25,9 @@ app.use("*", cors(), prettyJSON(), logger());
 app.route("/", home);
 app.route("/auth", auth);
 app.route("/user", user);
-app.route("/ping", ping);
 app.route("/book", book);
+app.route("/store", store);
+app.route("/ping", ping);
 
 /* 404 */
 app.notFound((c) => {

@@ -39,11 +39,7 @@ export const books = createTable("book", {
 	description: text("description").notNull(),
 	authors: text("authors").array().notNull(),
 	sellCount: integer("sell_count").notNull().default(0),
-	price: decimal("price")
-		.notNull()
-		// NOTE: this is a workaround, drizzle-orm does not support check constraints yet
-		// see: https://github.com/drizzle-team/drizzle-orm/issues/880#issuecomment-1814869720
-		.default(sql`100 check (price >= 100 and price <= 1000)`),
+	price: decimal("price").notNull(), // TODO: add check constraint for 100 <= price <= 1000
 });
 
 export type NewBook = typeof books.$inferInsert;
@@ -64,14 +60,18 @@ export const authors = createTable("author", {
  * -----------------------------------------------------------------------------------------------*/
 
 export const purchase_history = createTable("purchase_history", {
-	id: uuid("id").defaultRandom().primaryKey(),
 	userId: uuid("user_id")
+		.primaryKey()
 		.notNull()
 		.references(() => users.id),
 	bookId: uuid("book_id")
+		.unique()
 		.notNull()
 		.references(() => books.id),
 	purchaseDate: date("purchase_date").notNull(),
 	price: decimal("price").notNull(),
 	quantity: integer("quantity").notNull(),
 });
+
+export type NewPurchase = typeof purchase_history.$inferInsert;
+export type Purchase = typeof purchase_history.$inferSelect;

@@ -1,14 +1,16 @@
-/* -----------------------------------------------------------------------------------------------
- * book queries
- * -----------------------------------------------------------------------------------------------*/
-
 import postgres from "postgres";
 import { eq } from "drizzle-orm";
 import type { z } from "zod";
 
 import { db } from ".";
 import { CustomError } from "../utils";
-import { type NewBook, books, users } from "./schema";
+import {
+	type NewBook,
+	type NewPurchase,
+	books,
+	users,
+	purchase_history,
+} from "./schema";
 import type { listBookSchema } from "../validations/book";
 import type { changeRoleSchema, updateUserSchema } from "../validations/user";
 
@@ -147,5 +149,84 @@ export async function deleteBook(id: string) {
 		}
 
 		throw new CustomError("Error deleting book", "delete_book_error");
+	}
+}
+
+/* -----------------------------------------------------------------------------------------------
+ * store queries
+ * -----------------------------------------------------------------------------------------------*/
+
+export async function buyBook(id: string, quantity?: number) {
+	try {
+		const book = await db.query.books.findFirst({
+			where: (books, { eq }) => eq(books.id, id),
+		});
+
+		if (!book) {
+			throw new CustomError("Book not found", "book_not_found");
+		}
+
+		// TODO: implement stocks
+
+		// if (book.stock < quantity) {
+		// 	throw new CustomError("Insufficient stock", "insufficient_stock");
+		// }
+
+		const [updatedBook] = await db
+			.update(books)
+			.set({
+				// stock: book.stock - (quantity ?? 1),
+				sellCount: book.sellCount + (quantity ?? 1),
+			})
+			.where(eq(books.id, id))
+			.returning();
+
+		return updatedBook;
+	} catch (error) {
+		if (error instanceof postgres.PostgresError) {
+			throw new CustomError(error.detail, "buy_book_error");
+		}
+
+		throw new CustomError("Error buying book", "buy_book_error");
+	}
+}
+
+export async function updatePurchaseHistory(payload: NewPurchase) {
+	try {
+		const bookPurchaseHistory = await db.query.purchase_history.findFirst({
+			where: (purchase_history, { eq, and }) =>
+				and(
+					eq(purchase_history.userId, payload.userId),
+					eq(purchase_history.bookId, payload.bookId),
+				),
+		});
+
+		if (bookPurchaseHistory) {
+			const [updatedPurchase] = await db
+				.update(purchase_history)
+				.set({
+					quantity: bookPurchaseHistory.quantity + payload.quantity,
+				})
+				.where(eq(purchase_history.bookId, payload.bookId))
+				.returning();
+
+			return updatedPurchase;
+		}
+
+		const [purchase] = await db
+			.insert(purchase_history)
+			.values(payload)
+			.returning();
+
+		return purchase;
+	} catch (error) {
+		if (error instanceof postgres.PostgresError) {
+			throw new CustomError(error.detail, "update_purchase_history_error");
+		}
+
+		throw new CustomError(
+			"Error updating purchase history",
+			"update_purchase_history_error",
+		);
 	}
 }

@@ -141,3 +141,23 @@ user.get(
 		);
 	}),
 );
+
+user.get("/cart", async (c) => {
+	// TODO: implement cart
+
+	return c.json({
+		status: "WARNING",
+		message: "⚠️ Cart feature is still in development",
+		data: null,
+	} satisfies ServerResponse);
+});
+
+user.get("/orders", async (c) => {
+	// TODO: implement orders
+
+	return c.json({
+		status: "WARNING",
+		message: "⚠️ Orders feature is still in development",
+		data: null,
+	} satisfies ServerResponse);
+});
