@@ -25,8 +25,7 @@ export function rbacMiddleware(
 	...permissions: Permission[]
 ): MiddlewareHandler {
 	return async (c, next) => {
-		const {  role } = c.get("jwtPayload") as JwtPayload;
-
+		const { role } = c.get("jwtPayload") as JwtPayload;
 
 		if (permissions.some((p) => !allPermissions[role].includes(p))) {
 			return c.json(

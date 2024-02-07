@@ -25,7 +25,7 @@ export const changeRoleSchema = z.object({
 	}),
 });
 
-export const deleteUSerSchema = z.object({
+export const deleteUserSchema = z.object({
 	id: z
 		.string({ required_error: "User ID is required" })
 		.uuid({ message: "Invalid User ID" }),

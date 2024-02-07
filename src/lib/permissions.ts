@@ -4,6 +4,7 @@ export const ALL_PERMISSIONS = [
 	// User
 	"list_user",
 	"update_user",
+	"delete_self",
 	"delete_user",
 	"change_role",
 	"purchase_history",
@@ -23,13 +24,13 @@ export const permissions: Permissions = {
 	user: [
 		"purchase_book",
 		"update_user",
-		"delete_user",
+		"delete_self",
 		"change_role",
 		"purchase_history",
 	],
 	author: [
 		"update_user",
-		"delete_user",
+		"delete_self",
 		"change_role",
 		"create_book",
 		"update_book",
@@ -37,5 +38,11 @@ export const permissions: Permissions = {
 		"sell_book",
 		"purchase_history",
 	],
-	admin: ["list_user", "delete_user", "change_role", "delete_book"],
+	admin: [
+		"list_user",
+		"delete_self",
+		"delete_user",
+		"change_role",
+		"delete_book",
+	],
 };

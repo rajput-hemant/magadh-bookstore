@@ -6,7 +6,7 @@ import { db } from "@/lib/db";
 import type { ServerResponse } from "@/types/server-response";
 import {
 	changeRoleSchema,
-	deleteUSerSchema,
+	deleteUserSchema,
 	updateUserSchema,
 } from "@/lib/validations/user";
 import { changeRole, deleteUser, updateUser } from "@/lib/db/queries";
@@ -109,8 +109,8 @@ user.post(
 
 user.get(
 	"/delete/:id",
-	rbacMiddleware("delete_user"),
-	zValidator("param", deleteUSerSchema, async (result, c) => {
+	rbacMiddleware("delete_self", "delete_user"),
+	zValidator("param", deleteUserSchema, async (result, c) => {
 		if (!result.success) {
 			return c.json(
 				{
@@ -122,7 +122,21 @@ user.get(
 			);
 		}
 
-		const deletedUser = await deleteUser(result.data.id);
+		const { id } = result.data;
+		const { id: userId, role } = c.get("jwtPayload");
+
+		if (role !== "admin" && id !== userId) {
+			return c.json(
+				{
+					status: "ERROR",
+					message: "❌ Unauthorized, Only admins can delete other users",
+					error: "forbidden",
+				} satisfies ServerResponse,
+				403,
+			);
+		}
+
+		const deletedUser = await deleteUser(id);
 
 		if (!deletedUser) {
 			throw new CustomError(
