@@ -4,3 +4,4 @@ export * from "./home.route";
 export * from "./ping.route";
 export * from "./store.route";
 export * from "./user.route";
+export * from "./routes";
